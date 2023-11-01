@@ -46,6 +46,11 @@ INSTALLED_APPS = [
     "users",
     "ads",
     "redoc",
+    "drf_spectacular",
+    "corsheaders",
+    "djoser",
+    'django_filters',
+
 ]
 
 
@@ -59,6 +64,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+
 
 ROOT_URLCONF = "skymarket.urls"
 
@@ -82,9 +89,27 @@ WSGI_APPLICATION = "skymarket.wsgi.application"
 
 # TODO здесь мы настраиваем аутентификацию и пагинацию
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+            # 'rest_framework.authentication.TokenAuthentication',
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ]
+
+
 }
 # TODO здесь мы настраиваем Djoser
 DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'users.serializers.UserRegistrationSerializer',
+        'current_user': 'users.serializers.CurrentUserSerializer',
+        'user': 'users.serializers.CurrentUserSerializer'
+    },
+    'LOGIN_FIELD': 'email',
+
 }
 
 # Database
@@ -92,6 +117,14 @@ DJOSER = {
 
 # TODO здесь необходимо настроить подключение к БД
 DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'skymarket',
+        'USER': 'skymarket',
+        'PASSWORD': 'skymarket',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
 }
 
 
@@ -112,6 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
 
 
 # Internationalization
@@ -144,6 +178,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+
+
 # Include Email Backend
 # TODO эти переменные мы добавили чтобы помочь Вам настроить почтовый ящик на django.
 # TODO теперь Вам необходимо создать файл .env на основе .env.example
@@ -153,3 +189,6 @@ EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = os.environ.get("EMAIL_PORT")
+
+
+AUTH_USER_MODEL = 'users.User'
