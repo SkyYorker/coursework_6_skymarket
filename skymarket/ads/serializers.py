@@ -8,20 +8,18 @@ from ads.models import Ad, Comment
 class CommentSerializer(serializers.ModelSerializer):
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
     author_last_name = serializers.CharField(source='author.last_name', read_only=True)
-    author_id = serializers.IntegerField(source='author.id', read_only=True)
-    ad_id = serializers.IntegerField(source='ad.id', read_only=True)
     author_image = serializers.ImageField(source='author.image', read_only=True)
+
     class Meta:
         model = Comment
-        exclude = ['author', 'ad']
+        fields = '__all__'
 
 
 class AdSerializer(serializers.ModelSerializer):
-
     # TODO сериалайзер для модели
     class Meta:
         model = Ad
-        fields = ["image", "title", "price", "description"]
+        fields = '__all__'
 
 
 class AdDetailSerializer(serializers.ModelSerializer):
@@ -33,4 +31,4 @@ class AdDetailSerializer(serializers.ModelSerializer):
     # TODO сериалайзер для модели
     class Meta:
         model = Ad
-        exclude = ['author', 'created_at']
+        fields = '__all__'

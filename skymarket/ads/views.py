@@ -47,7 +47,6 @@ class AdDetailViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
         if self.action in ["list", "retrieve", "create", "delete", "patch"]:
